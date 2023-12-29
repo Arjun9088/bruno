@@ -10,5 +10,6 @@ contextBridge.exposeInMainWorld('ipcRenderer', {
     return () => {
       ipcRenderer.removeListener(channel, subscription);
     };
-  }
+  },
+  sendImage: (imageData) => ipcRenderer.send('open-image', imageData)
 });

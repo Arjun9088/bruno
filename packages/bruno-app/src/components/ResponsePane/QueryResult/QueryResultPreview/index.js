@@ -28,6 +28,9 @@ const QueryResultPreview = ({
   function onDocumentLoadSuccess({ numPages }) {
     setNumPages(numPages);
   }
+  const handleRightClick = () => {
+    ipcRenderer.sendImage(dataBuffer);
+  };
   // Fail safe, so we don't render anything with an invalid tab
   if (!allowedPreviewModes.includes(previewTab)) {
     return null;
@@ -52,7 +55,13 @@ const QueryResultPreview = ({
       );
     }
     case 'preview-image': {
-      return <img src={`data:${contentType.replace(/\;(.*)/, '')};base64,${dataBuffer}`} className="mx-auto" />;
+      return (
+        <img
+          src={`data:${contentType.replace(/\;(.*)/, '')};base64,${dataBuffer}`}
+          className="mx-auto"
+          onContextMenu={handleRightClick}
+        />
+      );
     }
     case 'preview-pdf': {
       return (

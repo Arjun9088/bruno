@@ -3,6 +3,7 @@ const fs = require('fs');
 const path = require('path');
 const { ipcMain, shell, dialog } = require('electron');
 const { envJsonToBru, bruToJson, jsonToBru, jsonToCollectionBru } = require('../bru');
+const { BrowserWindow, app, Menu } = require('electron');
 
 const {
   isValidPathname,
@@ -584,6 +585,12 @@ const registerMainEventHandlers = (mainWindow, watcher, lastOpenedCollections) =
   ipcMain.on('main:collection-opened', (win, pathname, uid) => {
     watcher.addWatcher(win, pathname, uid);
     lastOpenedCollections.add(pathname);
+  });
+
+  ipcMain.on('open-image', (event, imageData) => {
+    const tempImagePath = path.join(app.getPath('temp'), 'temp-image.png');
+    fs.writeFileSync(tempImagePath, imageData, 'base64');
+    shell.openPath(tempImagePath);
   });
 };
 
